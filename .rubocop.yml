@@ -1,0 +1,20 @@
+AllCops:
+  Exclude:
+    - Gemfile
+    - Gemfile.lock
+  NewCops: enable
+
+Layout/LineLength:
+  Max: 150
+
+Metrics/MethodLength:
+  Max: 15
+
+Style/GlobalVars:
+  Enabled: false
+
+Style/RedundantFileExtensionInRequire:
+  Enabled: false
+  
+Lint/NestedMethodDefinition:
+  Enabled: false
