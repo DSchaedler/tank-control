@@ -11,18 +11,63 @@ end
 
 # Game Instance Class. Responsible for managing Game State.
 class Game
+  attr_accessor :ship, :star_list
+
   def initialize
     @ship = Ship.new(owner: :player)
+
+    @star_list = []
+
+    10.times do
+      @star_list << EnergyPickup.new
+    end
   end
 
   def tick
     @ship.tick
     @ship.draw
+
+    @star_list.each do |star|
+      distance_to_ship = point_distance(point1: star.location, point2: $game.ship.location)
+      if distance_to_ship < 20 && $game.ship.energy < $game.ship.max_energy - 0.1
+        $game.ship.energy += 0.1
+        @star_list.delete star
+      end
+    end
+    @star_list.each(&:draw)
+
+    @star_list << EnergyPickup.new if @star_list.length < 10
+  end
+end
+
+# Energy Pickup Instance
+class EnergyPickup
+  attr_accessor :location
+
+  def initialize
+    @location = { x: randr(0, 1280), y: randr(0, 720) }
+    @sprite = 'sprites/misc/star.png'
+  end
+
+  def tick
+    distance_to_ship = point_distance(point1: @location, point2: $game.ship.location)
+    return unless distance_to_ship < 20
+
+    $gtk.args.outputs.labels << { x: 100, y: 100, text: 'True' }
+  end
+
+  def draw
+    $draw_queue << {
+      x: @location[:x], y: @location[:y], w: 20, h: 20,
+      path: @sprite
+    }
   end
 end
 
 # Class Instance.
 class Ship
+  attr_accessor :location, :energy, :max_energy
+
   def initialize(owner:)
     @owner = owner
     @speed = { x: 0, y: 0 }
@@ -146,4 +191,8 @@ def point_distance(point1:, point2:)
   dx = point2.x - point1.x
   dy = point2.y - point1.y
   Math.sqrt((dx * dx) + (dy * dy))
+end
+
+def randr(min, max)
+  rand(max - min + 1) + min
 end
