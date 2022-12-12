@@ -128,7 +128,7 @@ class Ship
         @speed[:y] = new_speed_y
         use_fuel = true
       end
-      @energy -= @acceleration / 200 if use_fuel
+      @energy -= @acceleration / 100 if use_fuel
     end
 
     return unless dh_keys.include? :q
@@ -156,7 +156,7 @@ class Ship
     box = { x: 20, y: 20, w: 400, h: 30 }
     bar_margin = 3
     border_color = { r: 0, g: 0, b: 0, a: 255 }
-    fill_color = { r: 255, g: 0, b: 0, a: 128 }
+    fill_color = { r: 0, g: 0, b: 255, a: 128 }
 
     fill_box = { x: box[:x] + bar_margin, y: box[:y] + bar_margin, w: (box[:w] - (bar_margin * 2)) * @energy, h: box[:h] - (bar_margin * 2) }
 
